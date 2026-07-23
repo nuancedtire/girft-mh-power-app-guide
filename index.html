@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Build guide for a non-identifiable GIRFT Mental Health ED Breach Analysis Power App." />
+    <title>GIRFT MH ED Breach Analysis | Power Apps Build Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="eyebrow">NHS SERVICE IMPROVEMENT · BUILD NOTE 01</div>
+      <h1>Make the collection<br /><em>useful.</em></h1>
+      <p class="lede">A practical build guide for a non-identifiable Power Apps and SharePoint workflow supporting the GIRFT Mental Health ED Breach Analysis Tool.</p>
+      <div class="guardrail"><strong>Guardrail:</strong> this is an internal implementation guide, not a clinical record. Do not store patient-identifiable information.</div>
+      <nav aria-label="Page sections">
+        <a href="#decision">Decide</a>
+        <a href="#list">Model data</a>
+        <a href="#app">Build app</a>
+        <a href="#review">Review</a>
+        <a href="#export">Export</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="decision" class="chapter introduction">
+        <div class="chapter-number">01</div>
+        <div>
+          <p class="kicker">Before the first click</p>
+          <h2>Build a local improvement workflow, not another spreadsheet.</h2>
+          <p>The app records one eligible 12+ hour mental-health-related ED stay per case. It supports the immediate GIRFT return of 10 consecutive patients and can continue as a local quality-improvement dataset after the collection period.</p>
+          <div class="two-up cards">
+            <article class="card">
+              <span class="tag">OWNER</span>
+              <h3>Nominate three roles</h3>
+              <p>Contributor: creates and edits cases. Reviewer: quality-checks and approves. Owner: manages permissions, app changes, exports and retention.</p>
+            </article>
+            <article class="card">
+              <span class="tag">DATA BOUNDARY</span>
+              <h3>Keep it non-identifiable</h3>
+              <p>No name, NHS number, date of birth, address, free-text chronology or other information that could identify a patient. Use only <code>Case 01</code> to <code>Case 10</code> or a locally agreed anonymous reference.</p>
+            </article>
+          </div>
+          <aside class="note"><strong>Recommended first release:</strong> SharePoint List as the data store, Canvas App as the guided entry interface, Power Automate only for notifications/PDF if approved, and Power BI only after the initial 10 cases are complete.</aside>
+        </div>
+      </section>
+
+      <section id="list" class="chapter">
+        <div class="chapter-number">02</div>
+        <div>
+          <p class="kicker">SharePoint</p>
+          <h2>Create the data store first.</h2>
+          <ol class="steps">
+            <li>Open the approved Trust/team SharePoint site.</li>
+            <li>Select <strong>New</strong> → <strong>List</strong> → <strong>Blank list</strong>.</li>
+            <li>Name it <code>GIRFT MH ED Breach Cases</code>. Do not make it publicly visible.</li>
+            <li>In List settings, turn off attachments unless a local IG lead expressly requires them. This workflow should not accept clinical documents.</li>
+            <li>Keep version history enabled. In Advanced settings, allow users to edit only items they created if contributors should not see each other's cases.</li>
+          </ol>
+
+          <h3 class="subhead">Core operational columns</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Display name</th><th>SharePoint type</th><th>Purpose</th></tr></thead>
+              <tbody>
+                <tr><td>Title</td><td>Single line of text</td><td>Rename display label to <strong>Case reference</strong>. Use a non-identifiable value, e.g. <code>June-01</code>.</td></tr>
+                <tr><td>Collection period</td><td>Choice</td><td><code>June 2026</code>, <code>January 2027</code>, <code>Local ongoing collection</code>.</td></tr>
+                <tr><td>Case sequence</td><td>Number</td><td>1–10 for the GIRFT return. Use for the consecutive-case register.</td></tr>
+                <tr><td>Workflow status</td><td>Choice</td><td><code>Draft</code>, <code>Ready for review</code>, <code>Returned for amendment</code>, <code>Approved</code>, <code>Submitted to NHS</code>.</td></tr>
+                <tr><td>Reviewer notes</td><td>Multiple lines of text</td><td>Internal data-quality notes only. Do not place patient details here.</td></tr>
+                <tr><td>Submitted date</td><td>Date and time</td><td>Set when the NHS online response has been manually submitted.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="subhead">Survey columns</h3>
+          <p>Create the following columns. Choice columns that say <strong>multiple</strong> must have <em>Allow multiple selections</em> turned on. The exact option sets are in the NHS printable tool; use those options verbatim in the list.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Questions</th><th>Columns to create</th><th>Type</th></tr></thead>
+              <tbody>
+                <tr><td>Q8–Q11</td><td>ED stay duration; comments; system parts involved; delay factors; main driver</td><td>Text; long text; multiple choice; multiple choice; choice</td></tr>
+                <tr><td>Q12–Q16</td><td>Delay escalated; escalation stage; escalated to; escalation outcome; action taken</td><td>Choice; choice; multiple choice; choice; multiple choice</td></tr>
+                <tr><td>Q17–Q18</td><td>Referred to MHLT; reason not referred</td><td>Choice; multiple choice</td></tr>
+                <tr><td>Q19–Q26</td><td>Age band; diagnosis; presenting need; known to MH services; months since discharge; CMHT care; recent inpatient/crisis discharge; arrival method; MHA status</td><td>Choice/multiple choice; number; choice</td></tr>
+                <tr><td>Q27–Q39</td><td>For every event: recording status, date/time, known reason for delay</td><td>Choice; date and time; long text</td></tr>
+                <tr><td>Q40–Q44</td><td>Discharge destination; destination referral date/time and reason; transport booking status/date/time/reason; transport type; arrival status/date/time/reason; immediately available</td><td>Choice; date and time; long text</td></tr>
+                <tr><td>Q45–Q47</td><td>Safety concern; safety concern type; safety description; main improvement opportunity; improvement narrative</td><td>Choice; multiple choice; long text</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <details>
+            <summary>Chronology event columns: copy this pattern 13 times</summary>
+            <p>Create this three-column pattern for: ED arrival; MHLT referral; MHLT response; MHLT assessment commenced; MHLT assessment completed; MHA referral to AMHP; MHA assessment commenced; MHA assessment completed; crisis gatekeeping referral; crisis gatekeeping; decision to admit; bed allocated; ED discharge.</p>
+            <pre><code>ED arrival recorded?       Choice: Clearly documented / Not recorded / Not applicable
+ED arrival date and time   Date and time
+ED arrival delay reason    Multiple lines of text</code></pre>
+          </details>
+        </div>
+      </section>
+
+      <section id="app" class="chapter">
+        <div class="chapter-number">03</div>
+        <div>
+          <p class="kicker">Power Apps</p>
+          <h2>Make entry feel like a guided review.</h2>
+          <ol class="steps">
+            <li>Go to <a href="https://make.powerapps.com/" target="_blank" rel="noreferrer">make.powerapps.com</a> in the correct NHS environment.</li>
+            <li>Select <strong>Create</strong> → <strong>Blank canvas app</strong> → <strong>Tablet</strong>. Name it <code>GIRFT MH ED Breach Collection</code>.</li>
+            <li>Select <strong>Data</strong> → <strong>Add data</strong> → <strong>SharePoint</strong>, then connect the <code>GIRFT MH ED Breach Cases</code> list.</li>
+            <li>Create four screens: <strong>Dashboard</strong>, <strong>Case entry</strong>, <strong>Review</strong>, and <strong>Submission view</strong>.</li>
+          </ol>
+          <div class="screen-grid">
+            <article class="screen-card"><span>01</span><h3>Dashboard</h3><p>Ten numbered case cards, workflow status, missing-field count, and “new case” button.</p></article>
+            <article class="screen-card"><span>02</span><h3>Case entry</h3><p>Five collapsible sections: Overview, Demographics, Chronology, Safety, Reflection.</p></article>
+            <article class="screen-card"><span>03</span><h3>Review</h3><p>Read-only summary with a completeness check and approve/return actions.</p></article>
+            <article class="screen-card"><span>04</span><h3>Submission</h3><p>Answers in the same sequence as the NHS online form, ready for manual transcription.</p></article>
+          </div>
+
+          <h3 class="subhead">Use the right control for the answer</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Question type</th><th>Power Apps control</th><th>Property / behaviour</th></tr></thead>
+              <tbody>
+                <tr><td>One answer</td><td>Radio or Dropdown</td><td>Bind <code>Items</code> to <code>Choices('GIRFT MH ED Breach Cases'.'MHA status')</code>.</td></tr>
+                <tr><td>Select all that apply</td><td>Combo box</td><td>Set <code>SelectMultiple</code> to <code>true</code>. Do not replace this with a text box.</td></tr>
+                <tr><td>Date + time</td><td>Date picker + Dropdown</td><td>Use a date picker and a 30-minute time dropdown, then combine them on save.</td></tr>
+                <tr><td>Narrative</td><td>Text input</td><td>Set <code>Mode</code> to <code>TextMode.MultiLine</code>; add a character guidance label.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="subhead">Essential Power Fx</h3>
+          <p>Use a form named <code>frmCase</code>, a collection named <code>colMissing</code>, and a gallery named <code>galCases</code>. Adapt column names to your final SharePoint internal names.</p>
+          <pre><code>// Create a draft case
+NewForm(frmCase);
+Navigate(scrCaseEntry, ScreenTransition.Cover)
+
+// Save without completing the return
+SubmitForm(frmCase);
+
+// Save and mark ready for review
+If(
+    CountRows(colMissing) = 0,
+    Patch('GIRFT MH ED Breach Cases', frmCase.LastSubmit,
+        {'Workflow status': {Value: "Ready for review"}}),
+    Notify("Complete the highlighted required fields before review.", NotificationType.Error)
+)
+
+// Conditional section: escalation questions
+ddEscalated.Selected.Value = "Yes"
+
+// Conditional section: MHLT chronology
+ddMHLTReferral.Selected.Value = "Yes"</code></pre>
+          <aside class="note"><strong>Important:</strong> SharePoint multi-choice fields require the Combo box’s selected records, not a concatenated string. In an Edit Form data card, use the generated <code>Update</code> formula and do not overwrite it with text.</aside>
+        </div>
+      </section>
+
+      <section id="review" class="chapter">
+        <div class="chapter-number">04</div>
+        <div>
+          <p class="kicker">Quality and access</p>
+          <h2>Make the right thing the easy thing.</h2>
+          <div class="two-up cards">
+            <article class="card">
+              <span class="tag">PERMISSIONS</span>
+              <h3>Keep roles deliberate</h3>
+              <ul>
+                <li>Owners: site/list and app administration.</li>
+                <li>Contributors: create and edit their cases.</li>
+                <li>Reviewers: read all cases, approve or return them.</li>
+                <li>Do not use anonymous sharing links.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <span class="tag">QUALITY GATE</span>
+              <h3>Review before NHS entry</h3>
+              <ul>
+                <li>Check eligibility: MH-related attendance and ED stay &gt;12 hours.</li>
+                <li>Check 10 cases are consecutive.</li>
+                <li>Check no identifiable text has been entered.</li>
+                <li>Use “Not recorded” where permitted instead of an empty required answer.</li>
+              </ul>
+            </article>
+          </div>
+          <h3 class="subhead">Test with synthetic data only</h3>
+          <ol class="checklist">
+            <li><input type="checkbox" /> A contributor can create, save and resume a draft.</li>
+            <li><input type="checkbox" /> Multi-select answers save and reopen correctly.</li>
+            <li><input type="checkbox" /> “No escalation” hides Q13–Q16.</li>
+            <li><input type="checkbox" /> “No MHLT referral” hides MHLT-specific chronology but retains safety/outcome questions.</li>
+            <li><input type="checkbox" /> A reviewer can return a case with a non-identifying note.</li>
+            <li><input type="checkbox" /> The submission view uses the selected case and displays all expected answers.</li>
+            <li><input type="checkbox" /> A mobile/tablet user can complete a long chronology without horizontal scrolling.</li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="export" class="chapter export">
+        <div class="chapter-number">05</div>
+        <div>
+          <p class="kicker">Handover and learning</p>
+          <h2>Export is a workflow, not a button.</h2>
+          <div class="flow" aria-label="Export workflow">
+            <div><span>1</span><strong>Approve</strong><small>Reviewer checks each case.</small></div>
+            <div><span>2</span><strong>Submit</strong><small>Administrator transcribes to NHS Citizen Space.</small></div>
+            <div><span>3</span><strong>Record</strong><small>Set workflow status to Submitted to NHS.</small></div>
+            <div><span>4</span><strong>Export</strong><small>List → Export to Excel for approved local analysis.</small></div>
+          </div>
+          <h3 class="subhead">Three safe outputs</h3>
+          <ul class="outputs">
+            <li><strong>NHS return:</strong> manually transcribe the approved case using the Submission screen. Citizen Space does not provide a standard direct integration.</li>
+            <li><strong>Local spreadsheet:</strong> in the SharePoint List, select the view, filter to <code>Approved</code> or <code>Submitted to NHS</code>, then use <strong>Export</strong> → <strong>Export to Excel</strong>.</li>
+            <li><strong>Dashboard:</strong> connect Power BI to the List only after data-quality checks. Show aggregated delay drivers and timings; avoid case-level free-text in broadly shared reports.</li>
+          </ul>
+          <aside class="note"><strong>Retention:</strong> agree who owns the List, who may export it, and when it will be deleted or archived under local information-governance rules before collecting live data.</aside>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>GIRFT MH ED Breach Analysis · Power Apps implementation guide</span>
+      <span>Designed for an approved NHS Microsoft 365 environment</span>
+    </footer>
+  </body>
+</html>
