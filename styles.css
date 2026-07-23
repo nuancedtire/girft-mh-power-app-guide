@@ -3,6 +3,7 @@
 html { scroll-behavior:smooth; }
 body { margin:0; background:var(--paper); color:var(--ink); font-family:Manrope, sans-serif; font-size:16px; line-height:1.65; }
 .masthead { min-height:92vh; padding:8vw max(6vw, 24px) 48px; color:var(--white); background:radial-gradient(circle at 84% 23%, #147c84 0 11%, transparent 11.5%), radial-gradient(circle at 93% 76%, #db603c 0 7%, transparent 7.5%), linear-gradient(135deg, #062d3c 0%, #073b4c 61%, #0c5560 100%); position:relative; overflow:hidden; }
+.masthead.compact { min-height:62vh; }
 .masthead::after { content:""; position:absolute; inset:0; opacity:.22; background-image:linear-gradient(90deg, transparent 49.8%, rgba(255,255,255,.35) 50%, transparent 50.2%),linear-gradient(0deg, transparent 49.8%, rgba(255,255,255,.35) 50%, transparent 50.2%); background-size:38px 38px; pointer-events:none; }
 .masthead > * { position:relative; z-index:1; max-width:920px; }
 .eyebrow, .kicker, .tag { letter-spacing:.14em; text-transform:uppercase; font-family:"DM Mono", monospace; font-size:.72rem; font-weight:500; }
@@ -40,5 +41,6 @@ details { margin-top:22px; padding:16px 18px; background:var(--mist); } summary 
 .checklist { list-style:none; padding:0; } .checklist li { padding:11px 0; border-bottom:1px solid var(--line); } .checklist input { accent-color:var(--blue); margin-right:10px; }
 .flow { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:34px 0 20px; } .flow div { padding:18px; background:var(--deep); color:var(--white); } .flow span { display:block; color:#a8e5df; font:500 .78rem "DM Mono", monospace; } .flow strong { display:block; margin:12px 0 6px; font:650 1.25rem Fraunces,serif; } .flow small { color:#d6e6e4; }
 .outputs { padding:0; list-style:none; } .outputs li { padding:18px 0; border-bottom:1px solid var(--line); }
+.reference-link { margin-top:25px; font-weight:700; }
 a { color:#006b77; } footer { display:flex; justify-content:space-between; gap:24px; padding:28px max(6vw,24px); color:#dae8e6; background:var(--deep); font-size:.78rem; }
 @media (max-width:760px) { .masthead { min-height:auto; padding-top:88px; } .chapter { grid-template-columns:1fr; gap:8px; } .two-up,.flow { grid-template-columns:1fr; } .screen-grid { grid-template-columns:repeat(2,1fr); } footer { display:block; } footer span { display:block; margin-bottom:7px; } }

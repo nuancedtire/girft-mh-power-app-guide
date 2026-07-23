@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Complete field specification for the GIRFT MH ED Breach Analysis Power Apps implementation." />
+    <title>Complete Field Specification | GIRFT MH ED Breach Analysis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="masthead compact">
+      <div class="eyebrow">NHS SERVICE IMPROVEMENT · BUILD NOTE 02</div>
+      <h1>Field<br /><em>specification.</em></h1>
+      <p class="lede">The complete build checklist for the published GIRFT MH ED Breach Analysis Tool, including the 47 question numbers, response design, permitted values and the June 10-case collection protocol.</p>
+      <div class="guardrail"><strong>Source control:</strong> this page transcribes the NHS printable tool supplied on 23 July 2026. Before go-live, compare it to the live NHS survey because NHS England may revise question wording or options.</div>
+      <nav aria-label="Page sections">
+        <a href="index.html">Build guide</a>
+        <a href="#protocol">Protocol</a>
+        <a href="#respondent">Q1–Q7</a>
+        <a href="#overview">Q8–Q18</a>
+        <a href="#demographics">Q19–Q26</a>
+        <a href="#chronology">Q27–Q44</a>
+        <a href="#safety">Q45–Q47</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="protocol" class="chapter introduction">
+        <div class="chapter-number">A</div>
+        <div>
+          <p class="kicker">Collection protocol</p>
+          <h2>What to collect, when, and who does it.</h2>
+          <div class="two-up cards">
+            <article class="card"><span class="tag">INCLUDE</span><h3>Exactly 10 consecutive cases</h3><p>During the June 2026 collection period, collect one response for each of the first 10 consecutive patients whose primary reason for ED attendance is mental-health-related and whose ED stay exceeds 12 hours.</p></article>
+            <article class="card"><span class="tag">EXCLUDE</span><h3>No patient identifiers</h3><p>Do not enter name, NHS number, date of birth, address, post code, record number, or identifying narrative. The NHS survey is designed not to collect patient-identifiable data.</p></article>
+          </div>
+          <ol class="steps">
+            <li>Agree the acute hospital site, acute Trust, mental health Trust, named data collator and reviewer before the first case.</li>
+            <li>Identify cases prospectively where feasible as they approach the 12-hour threshold. Retrospective collection is permitted, but timestamps may be unavailable.</li>
+            <li>Start a case record for every eligible patient in sequence. Do not select “better” examples or skip a difficult case.</li>
+            <li>Use the acute record for the early pathway and liaise with the MH Trust for MHLT, MHA, bed and transport information.</li>
+            <li>Select <strong>Not recorded</strong> where the tool allows it. Do not invent a time or use an estimate.</li>
+            <li>Reviewer quality-checks the record, then the nominated administrator manually submits one online NHS form per patient.</li>
+          </ol>
+          <aside class="note"><strong>Interpretation:</strong> “MHLT response” means the first contact following referral, not the full assessment. “Assessment start” means the beginning of the full mental-health assessment. “Assessment complete” means the clinical decision was reached.</aside>
+        </div>
+      </section>
+
+      <section id="respondent" class="chapter"><div class="chapter-number">01</div><div>
+        <p class="kicker">Respondent details</p><h2>Q1–Q7: configured once, copied to each submission.</h2>
+        <div class="table-wrap"><table><thead><tr><th>Q</th><th>NHS question / field</th><th>SharePoint column</th><th>Control</th></tr></thead><tbody>
+          <tr><td>Q1</td><td>Which Acute Trust are you responding on behalf of?</td><td>Acute Trust</td><td>Choice. Use the NHS Trust list from the live survey, with Other (not listed).</td></tr>
+          <tr><td>Q2</td><td>Which Acute Hospital Site are you responding on behalf of?</td><td>Acute Hospital Site</td><td>Choice. Use the NHS site list from the live survey, with site not listed.</td></tr>
+          <tr><td>Q3</td><td>Which Mental Health Trust provides your local MH and Liaison services?</td><td>Mental Health Trust</td><td>Choice. Use the NHS Trust list from the live survey, with Other (not listed).</td></tr>
+          <tr><td>Q4, Q5, Q6</td><td>Q4: name; Q5: email address; Q6: job title / position</td><td>Respondent Name, Email, Job Title</td><td>Single line text. Store in a separate configuration list if several cases share the same respondent.</td></tr>
+          <tr><td>Q7</td><td>Names / job titles of other people contributing</td><td>Other Contributors</td><td>Multiple lines text. Staff details are permitted; do not include patient details.</td></tr>
+        </tbody></table></div>
+      </div></section>
+
+      <section id="overview" class="chapter"><div class="chapter-number">02</div><div>
+        <p class="kicker">Overview / context</p><h2>Q8–Q18: what delayed this case?</h2>
+        <div class="table-wrap"><table><thead><tr><th>Q</th><th>Field</th><th>Response design and official options</th></tr></thead><tbody>
+          <tr><td>Q8</td><td>Total time in ED; additional comments</td><td>Text in <code>HH:MM</code>. Optional non-identifying comments.</td></tr>
+          <tr><td>Q9</td><td>System parts involved in delay</td><td><strong>Multiple choice:</strong> Acute trust processes; Mental health trust processes; External partners (e.g. ambulance, police, social care); Other. Add “Other system part” text.</td></tr>
+          <tr><td>Q10</td><td>Relevant factors impacting delay</td><td><strong>Multiple choice:</strong> Delay in ED triage; delay in medical clearance; delay in referral to MHLT; delay in MHLT response; delay in starting MH assessment; assessment duration; S12 availability; AMHP availability; delay in MHA assessment process; bed availability; social care package delays; secure transport; other transport / conveyance delays; external agency delays; staffing constraints; lack of service provision; patient not medically fit for MH assessment; intoxication; complexity of clinical presentation; unknown patient / lack of history; patient declined/refused MH assessment; Other. Add “Other delay factor” text.</td></tr>
+          <tr><td>Q11</td><td>Main driver of delay</td><td><strong>Single choice:</strong> use exactly the Q10 option set, including Other (as specified above).</td></tr>
+          <tr><td>Q12</td><td>Was the delay escalated?</td><td><strong>Single choice:</strong> Yes; No; Unknown. If No, skip Q13–Q16 and continue at Q17.</td></tr>
+          <tr><td>Q13</td><td>Stage delay first escalated</td><td><strong>Single choice:</strong> ED arrival / triage; awaiting medical review or clearance; awaiting MHLT response; during MHLT assessment; awaiting MHA / AMHP; awaiting bed / admission; awaiting discharge / transport; Other. Add Other text.</td></tr>
+          <tr><td>Q14</td><td>Who was the delay escalated to?</td><td><strong>Multiple choice:</strong> ED team; Mental Health team; on-call senior clinician (MH or acute); operational / site management team; system partners; not known; Other. Add Other text.</td></tr>
+          <tr><td>Q15</td><td>Outcome of escalation</td><td><strong>Single choice:</strong> No action taken; Reviewed but no immediate change; Action taken – delay reduced; Action taken – no impact on delay; Not known; Other. Add Other text.</td></tr>
+          <tr><td>Q16</td><td>Action taken</td><td><strong>Multiple choice:</strong> Senior clinical review; prioritisation of assessment; escalation to bed management; escalation to external agency; staffing adjusted / additional resource; Other. Add Other text.</td></tr>
+          <tr><td>Q17</td><td>Was the individual referred to MHLT?</td><td><strong>Single choice:</strong> Yes; No; Unknown.</td></tr>
+          <tr><td>Q18</td><td>Why was the patient not referred to MHLT?</td><td><strong>Multiple choice:</strong> Not clinically indicated; patient not medically fit for assessment; intoxication; patient declined/refused MH involvement; managed within ED; referred to alternative service; not known; Other. Add Other text. This is relevant if Q17 = No.</td></tr>
+        </tbody></table></div>
+      </div></section>
+
+      <section id="demographics" class="chapter"><div class="chapter-number">03</div><div>
+        <p class="kicker">Demographics / history</p><h2>Q19–Q26: coded context, not identifiers.</h2>
+        <div class="table-wrap"><table><thead><tr><th>Q</th><th>Field</th><th>Response design and official options</th></tr></thead><tbody>
+          <tr><td>Q19</td><td>Age</td><td><strong>Single choice:</strong> &lt;18; 18–25; 26–35; 36–64; 65+.</td></tr>
+          <tr><td>Q20</td><td>Mental health diagnosis</td><td><strong>Multiple choice:</strong> Psychosis; mood disorder; anxiety / stress-related disorder; personality disorder; substance misuse; acute intoxication; self-harm / overdose; suicidal ideation; medically unfit for MH assessment; mixed or unclear presentation; unknown to services / no history available; dementia / delirium; learning disability; neurodevelopmental disorder; Other. Add Other text.</td></tr>
+          <tr><td>Q21</td><td>Presenting MH need on arrival at ED</td><td><strong>Multiple choice control:</strong> Suicidal ideation; self-harm (including overdose); acute behavioural disturbance / agitation; risk to others; psychosis; low mood / depression; anxiety / panic; emotional distress / crisis; alcohol intoxication; drug intoxication; substance withdrawal; medically unwell / not fit for MH assessment; altered consciousness; mixed or unclear presentation; unknown patient / no history available; dementia / confusion; personality-related crisis; eating disorder-related presentation; neurodevelopmental needs; brought under S136; brought by police (non-S136); not known; Other. Add Other text. <em>The printable form labels this “select one” but presents checkboxes and “select all that apply”; confirm the live survey behaviour before go-live.</em></td></tr>
+          <tr><td>Q22</td><td>Known to MH services / months since discharge</td><td><strong>Single choice:</strong> Yes; No; Unknown. If Yes, capture nearest whole month since discharge: 1–10. The question refers to discharge from MH services in the previous 12 months.</td></tr>
+          <tr><td>Q23</td><td>Under CMHT care at ED presentation</td><td><strong>Single choice:</strong> Yes; No; Unknown.</td></tr>
+          <tr><td>Q24</td><td>Discharged from inpatient or crisis team in the previous 4 weeks</td><td><strong>Single choice:</strong> Yes; No; Unknown.</td></tr>
+          <tr><td>Q25</td><td>Method of attendance</td><td><strong>Single choice:</strong> Self-presentation (walk-in); self-presentation advised by NHS 111 #2 (MH); ambulance (emergency); ambulance (non-emergency / planned conveyance); Mental Health Response Vehicle; police (non-S136); S136; referred by another healthcare provider; transfer from another hospital / unit; secure transport; Unknown; Other. Add Other text.</td></tr>
+          <tr><td>Q26</td><td>MHA status on ED arrival</td><td><strong>Single choice:</strong> S136; S135; informal; detained under MHA (section not specified); Section 2; Section 3; Other MHA section; police powers (not under S135/136); not known; Other. Add Other text.</td></tr>
+        </tbody></table></div>
+      </div></section>
+
+      <section id="chronology" class="chapter"><div class="chapter-number">04</div><div>
+        <p class="kicker">Chronology</p><h2>Q27–Q44: capture evidence, not estimates.</h2>
+        <p>For every event timestamp below, use three fields in the Power App: <strong>recording status</strong> (Clearly documented / Not recorded / Not applicable), <strong>date and time</strong>, and <strong>known delay reason</strong>. Make the date/time visible only when status is Clearly documented. Use a combined DateTime column in SharePoint, not separate text fields.</p>
+        <div class="table-wrap"><table><thead><tr><th>Q</th><th>Event</th><th>Specific condition / extra field</th></tr></thead><tbody>
+          <tr><td>Q27</td><td>Individual arrived at ED</td><td>Optional known reason for delay.</td></tr>
+          <tr><td>Q28</td><td>Referral to MHLT made</td><td>Optional known reason for delay.</td></tr>
+          <tr><td>Q29</td><td>MHLT responded</td><td>If response exceeded the 1-hour standard, capture known reason(s).</td></tr>
+          <tr><td>Q30</td><td>MHLT assessment commenced</td><td>If commencement exceeded the 4-hour standard, capture known reason(s).</td></tr>
+          <tr><td>Q31</td><td>MHLT assessment completed</td><td>If completion exceeded the 4-hour standard, capture known reason(s).</td></tr>
+          <tr><td>Q32</td><td>MHA referral to AMHP</td><td>If applicable; capture known reason(s).</td></tr>
+          <tr><td>Q33</td><td>MHA assessment commenced</td><td>If applicable; capture known reason(s).</td></tr>
+          <tr><td>Q34</td><td>MHA assessment completed</td><td>If applicable; capture known reason(s).</td></tr>
+          <tr><td>Q35</td><td>Referral to crisis gatekeeping completed</td><td>If applicable; capture known reason(s).</td></tr>
+          <tr><td>Q36</td><td>Crisis gatekeeping took place</td><td>If applicable; capture known reason(s).</td></tr>
+          <tr><td>Q37</td><td>Decision to admit made</td><td>If applicable; capture known reason(s).</td></tr>
+          <tr><td>Q38</td><td>Bed allocated</td><td>If applicable; capture known reason(s).</td></tr>
+          <tr><td>Q39</td><td>Individual discharged from ED</td><td>Capture known reason(s) for delay, if applicable.</td></tr>
+          <tr><td>Q40</td><td>Planned discharge destination</td><td><strong>Single choice:</strong> Home (no formal follow-up); home with MH community follow-up; MH inpatient bed (same provider); MH inpatient bed (different provider / out of area); acute hospital ward; crisis house / step-down facility; CRHTT; community service (non-MH); social care placement; left before treatment completed; self-discharged; not known; Other. Add Other text, destination referral timestamp and known reason(s) for delay.</td></tr>
+          <tr><td>Q41</td><td>Transport booked</td><td>Timestamp and known reason(s) for delay, if applicable.</td></tr>
+          <tr><td>Q42</td><td>Form of transport booked</td><td><strong>Single choice:</strong> Secure transport; ambulance (emergency); ambulance (non-emergency / patient transport service); taxi / private hire; hospital transport (non-clinical / internal driver); Other; not known. Add Other text. The PDF also displays the standard recording-status choice.</td></tr>
+          <tr><td>Q43</td><td>Transport arrived</td><td>Timestamp and known reason(s) for delay, if applicable.</td></tr>
+          <tr><td>Q44</td><td>Was transport available immediately?</td><td><strong>Single choice:</strong> Yes; No – delay occurred; Unknown.</td></tr>
+        </tbody></table></div>
+      </div></section>
+
+      <section id="safety" class="chapter"><div class="chapter-number">05</div><div>
+        <p class="kicker">Patient safety and reflection</p><h2>Q45–Q47: close the loop.</h2>
+        <div class="table-wrap"><table><thead><tr><th>Q</th><th>Field</th><th>Response design and official options</th></tr></thead><tbody>
+          <tr><td>Q45</td><td>Patient safety concerns during ED stay</td><td><strong>Single choice:</strong> Yes; No; Unknown.</td></tr>
+          <tr><td>Q46</td><td>Type and description of patient safety concern</td><td><strong>Multiple choice:</strong> Self-harm during ED stay; suicide attempt during ED stay; absconding / attempted abscond; deterioration in mental state; physical health deterioration; aggression or violence; use of restraint; safeguarding concern; Other. Add Other text and a brief non-identifying description.</td></tr>
+          <tr><td>Q47</td><td>Single biggest opportunity to reduce delay</td><td><strong>Single choice:</strong> Earlier ED assessment / medical clearance; earlier referral to MHLT; faster MHLT response; earlier start of MH assessment; improved coordination between teams; improved escalation processes; increased staffing / resource availability; improved access to inpatient beds; improved access to transport; improved access to AMHP / S12; alternative pathway could have avoided ED attendance; not clear; Other. Add Other text and a 2–3 sentence non-identifying narrative. <em>The printable form also says “select all that apply”; use a single-choice control because the question asks for the single biggest opportunity, and verify against the live survey.</em></td></tr>
+        </tbody></table></div>
+        <aside class="note"><strong>Go-live check:</strong> take a screenshot or PDF of the live NHS survey immediately before launch and compare Q21, Q42 and Q47 with this specification. These have wording/control ambiguities in the printable PDF. Update the app rather than forcing staff to work around a changed national form.</aside>
+      </div></section>
+    </main>
+    <footer><span>GIRFT MH ED Breach Analysis · Complete field specification</span><span>Source: NHS England printable tool, checked 23 July 2026</span></footer>
+  </body>
+</html>
